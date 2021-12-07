@@ -1,0 +1,44 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - motorwaynet
+    environment:
+      - THIRD_PARTY_URL=http://mountebank
+      - THIRD_PARTY_PORT=4545
+      - REDIS_URL=redis://redis
+      - REDIS_PORT=6379
+      - APP_PORT=8080
+
+  redis:
+    image: redis:bullseye
+    restart: always
+    # command:
+    #   - /setup/setup-couchbase.sh
+    # volumes:
+    #   - ./couchbase:/setup
+    ports:
+     - "6379:6379"
+    networks:
+      - motorwaynet
+
+  mountebank:
+    container_name: mountebank
+    image: jkris/mountebank:latest
+    # volumes:
+    # - ./mountebank:/imposters
+    ports:
+    - 2525:2525
+    - 4545:4545
+    # command: --configfile /imposters/imposters.ejs --allowInjection
+    networks:
+      - motorwaynet
+
+networks:
+  motorwaynet:
+    name: motorwaynet

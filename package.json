@@ -1,0 +1,24 @@
+{
+  "name": "motorway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha '{,!(node_modules)/**/}*.spec.js'",
+    "e2e": "mocha '{,!(node_modules)/**/}*.e2e.js'",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "sinon": "^12.0.1",
+    "supertest": "^6.1.6"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "express": "^4.17.1",
+    "redis": "^4.0.0"
+  }
+}
