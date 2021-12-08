@@ -4,9 +4,11 @@ const POLLING_INTERVAL = 1000;
 const MAX_TIME_TO_WAIT = 60000;
 
 class RedisWrapper {
-    constructor(baseUrl = process.env.REDIS_URL, port = process.env.REDIS_PORT) {
+    constructor(baseUrl = process.env.REDIS_URL, port = process.env.REDIS_PORT, pollingInterval = POLLING_INTERVAL, maxTimeToWait = MAX_TIME_TO_WAIT) {
         this.baseUrl = baseUrl;
         this.port = port;
+        this.pollingInterval = typeof pollingInterval === undefined ? POLLING_INTERVAL : pollingInterval;
+        this.maxTimeToWait = typeof maxTimeToWait === undefined ? MAX_TIME_TO_WAIT : maxTimeToWait;
     }
 
     async get(key) {
@@ -17,11 +19,11 @@ class RedisWrapper {
         while(result === PENDING) {
             result = await new Promise(resolve => {
                 redisClient.get(key).then(valueInCache => {
-                    setTimeout(() => resolve(valueInCache), POLLING_INTERVAL);
-                    timeWaited += POLLING_INTERVAL;
+                    setTimeout(() => resolve(valueInCache), this.pollingInterval);
+                    timeWaited += this.pollingInterval;
                 });
-            })
-            if (timeWaited >= MAX_TIME_TO_WAIT) {
+            });
+            if (timeWaited >= this.maxTimeToWait) {
                 result = null;
             }
         }

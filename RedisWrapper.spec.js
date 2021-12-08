@@ -49,4 +49,11 @@ describe("RedisWrapper tests", function () {
         expect(value1).to.equal("v1");
         expect(value2).to.equal("v2");
     });
+
+    it("When time waited exceeds max time to wait then return null", async () => {
+        redisWrapper.maxTimeToWait = 100;
+        await redisWrapper.set("testValue", "PENDING");
+        const result = await redisWrapper.get("testValue");
+        expect(result).to.be.null;
+    });
 });
